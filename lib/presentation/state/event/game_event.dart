@@ -19,5 +19,9 @@ class PlayerSwiped extends GameEvent {
   List<Object> get props => [direction];
 }
 
+class PauseGame extends GameEvent {}
+
+class ResumeGame extends GameEvent {}
+
 
 

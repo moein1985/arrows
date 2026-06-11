@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'arrow.dart';
 
-enum GameStatus { initial, playing, gameOver }
+enum GameStatus { initial, playing, paused, gameOver }
 
 class GameState extends Equatable {
   final int score;
