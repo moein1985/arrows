@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'presentation/game/game_screen.dart';
-import 'core/di/injection_container.dart' as di;
+import 'presentation/game/puzzle_screen.dart';
+import 'presentation/game/start_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await di.init();
   runApp(const MainApp());
 }
 
@@ -13,9 +12,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Arrows Game',
-      home: GameScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (_) => const StartScreen(),
+        '/game': (_) => const PuzzleScreen(),
+      },
     );
   }
 }

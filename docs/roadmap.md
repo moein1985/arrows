@@ -1,203 +1,374 @@
-# 🧭 نقشه راه طراحی نسخه‌ی ۵۰ مرحله‌ای
+# 🧭 نقشه راه پروژه — Arrows: Puzzle Escape
 
-این فایل نقشه‌ی راه اولیه برای تبدیل بازی فعلی به نسخه‌ای شبیه به بازی مرجع است. هدف فعلی، ساخت یک پایه‌ی سالم و قابل گسترش برای ۵۰ مرحله است، نه منتشر کردن نسخه‌ی نهایی.
-
----
-
-## 1) هدف کوتاه‌مدت
-- ساخت یک نسخه‌ی مرحله‌ای و قابل‌پیشرفت
-- حفظ منطق اصلی بازی مشابه نسخه‌ی مرجع
-- تمرکز بر ۵۰ مرحله‌ی اول به‌جای امکانات پیچیده
-- طراحی ساختار قابل توسعه برای مراحل سخت‌تر در آینده
+> **بازی مرجع:** [Arrows – Puzzle Escape](https://play.google.com/store/apps/details?id=com.ecffri.arrows)
+> **هدف:** بازسازی منطق بازی با ۱۰۰ مرحله دست‌ساز
+> **روش:** ساده، گام‌به‌گام، بدون پیچیدگی اضافی
 
 ---
 
-## 2) وضعیت فعلی و نکته‌ی اصلی
-نسخه‌ی کنونی بیشتر روی «فلش‌های تصادفی و پاسخ سریع» است. برای نزدیک شدن به حس بازی مرجع، باید به سمت این ساختار برویم:
-- مرحله‌محور بودن
-- قوانین مشخص برای هر مرحله
-- رشد تدریجی سختی
-- حس حل مسئله و پیشرفت
+## ۱) بازی چه‌کار می‌کند؟ (خلاصه ساده)
+
+- یک **گرید** (مثل جدول) داریم با چند **فلش** روی آن.
+- هر فلش یک **جهت** دارد: بالا ⬆️، پایین ⬇️، چپ ⬅️، راست ➡️.
+- بازیکن روی فلش **ضربه** می‌زند. فلش در جهت خودش حرکت می‌کند و از گرید خارج می‌شود.
+- **اما:** اگر در مسیر حرکت فلش، فلش دیگری باشد → **تصادم**! یک ❤️ کم می‌شود.
+- اگر مسیر **خالی** باشد → فلش با موفقیت خارج می‌شود.
+- هر مرحله **۳ قلب** دارد. اگر همه تمام شوند → مرحله از اول شروع می‌شود.
+- هدف: **همه فلش‌ها را خارج کن** بدون از دست دادن همه قلب‌ها.
+- **بدون تایمر** — بازی آرام است.
+- دکمه‌ها: **Undo** (برگرداندن آخرین حرکت)، **Reset** (شروع مجدد مرحله)، **Hint** (نشان دادن فلش امن).
 
 ---
 
-## 3) نقشه‌ی اجرایی پیشنهادی
+## ۲) چه چیزی را باید تغییر دهیم؟
 
-### فاز 1 — پایه‌ی بازی و داده‌ی مراحل
-- [ ] ایجاد مدل مرحله (level data)
-- [ ] تعریف ساختار داده برای ۵۰ مرحله
-- [ ] طراحی state برای: شروع، بازی، پایان مرحله، بازی تمام‌شده
-- [ ] جدا کردن منطق بازی از UI
+کد فعلی دو سیستم اشتباه دارد:
+1. **سیستم Arcade**: فلش تصادفی با تایمر ظاهر می‌شود و بازیکن swipe می‌کند → **حذف**
+2. **سیستم توالی**: بازیکن دکمه جهت را به ترتیب فشار می‌دهد → **حذف**
 
-### فاز 2 — موتور اصلی بازی
-- [ ] حذف منطق «spawn بی‌نهایت تصادفی» به‌جای آن
-- [ ] پیاده‌سازی چرخه‌ی مرحله‌ای
-- [ ] اضافه‌کردن امتیاز، جان، و وضعیت موفقیت/شکست
-- [ ] طراحی سیستم «پاسخ صحیح / پاسخ غلط» برای هر مرحله
-
-### فاز 3 — طراحی ۵۰ مرحله
-- [ ] بلوک 1: مراحل 1 تا 10 (آموزشی و ساده)
-- [ ] بلوک 2: مراحل 11 تا 20 (ساده‌تر از متوسط)
-- [ ] بلوک 3: مراحل 21 تا 30 (متوسط)
-- [ ] بلوک 4: مراحل 31 تا 40 (سخت‌تر)
-- [ ] بلوک 5: مراحل 41 تا 50 (چالش‌برانگیز)
-
-### فاز 4 — تجربه‌ی کاربری
-- [ ] صفحه‌ی شروع با دکمه‌ی شروع
-- [ ] صفحه‌ی مرحله و HUD واضح
-- [ ] صفحه‌ی موفقیت و بازی‌تمام‌شده
-- [ ] انیمیشن‌های ساده برای ورود/پاسخ صحیح/اشتباه
-
-### فاز 5 — تست و polish
-- [ ] تست ۵۰ مرحله برای اطمینان از جریان درست
-- [ ] تنظیم سختی و تعادل
-- [ ] رفع باگ‌های UI و منطق
-- [ ] آماده‌سازی برای توسعه‌ی مراحل بعدی
+باید یک سیستم **گرید + ضربه** بسازیم.
 
 ---
 
-## 4) پیشنهاد تقسیم‌بندی ۵۰ مرحله
+## ۳) فایل‌هایی که باید بسازیم/تغییر دهیم
 
-### بلوک آموزش: مراحل 1 تا 10
-- تمرکز روی آشنایی با چهار جهت
-- مراحل کوتاه و قابل‌فهم
-- تعداد فلش کم
-- خطای کم
+### فایل‌هایی که باید بسازیم:
+1. `lib/domain/entities/puzzle_state.dart` — وضعیت بازی
+2. `lib/presentation/game/puzzle_screen.dart` — صفحه اصلی بازی (جای level_demo_screen)
+3. `lib/presentation/game/components/grid_widget.dart` — رندر گرید
+4. `lib/presentation/game/components/hud_widget.dart` — قلب‌ها و دکمه‌ها
 
-### بلوک ساده: مراحل 11 تا 20
-- کمی افزایش تعداد فلش‌ها
-- شروع الگوهای کوتاه
-- نیاز به تمرکز بیشتر
+### فایل‌هایی که باید بازنویسی کنیم:
+5. `lib/domain/entities/arrow.dart` — اضافه کردن row, col
+6. `lib/domain/entities/level.dart` — گرید-محور به جای توالی
+7. `lib/data/levels/level_data.dart` — ۱۰۰ مرحله دست‌ساز
+8. `lib/presentation/state/cubit/level_game_cubit.dart` — منطق پازل
+9. `lib/presentation/state/cubit/level_game_state.dart` — وضعیت UI پازل
+10. `lib/presentation/game/components/arrow_widget.dart` — سلول گرید
+11. `lib/presentation/game/start_screen.dart` — متن جدید
+12. `lib/presentation/game/progress_summary.dart` — ۱۰۰ مرحله
+13. `lib/core/di/injection_container.dart` — DI ساده
+14. `lib/main.dart` — مسیر جدید
 
-### بلوک متوسط: مراحل 21 تا 30
-- افزایش طول مسیر
-- نیاز به برنامه‌ریزی و پیش‌بینی
-- اضافه‌شدن حس فشار منطقی
-
-### بلوک سخت: مراحل 31 تا 40
-- الگوهای ترکیبی و تکراری
-- خطاها تاثیر بیشتری دارند
-- افزایش پیچیدگی در تصمیم‌گیری
-
-### بلوک چالش: مراحل 41 تا 50
-- طراحی برای بازیکن جدی
-- حالت‌های طولانی‌تر و سخت‌تر
-- آماده‌سازی برای گسترش به مرحله‌های بالاتر
-
----
-
-## 5) معیار موفقیت برای شروع
-نسخه‌ی فعلی را به‌عنوان موفق می‌دانیم اگر این‌ها برقرار باشند:
-- بازی از روی داده‌ی مرحله اجرا شود
-- ۱۰ مرحله‌ی اول روان و بدون خطا کار کنند
-- UI برای شروع و پایان مرحله قابل فهم باشد
-- منطق پاسخ صحیح/اشتباه درست عمل کند
-
----
-
-## 6) پیشنهاد اجرای عملی
-1. اول منطق مرحله‌محور را پیاده کنید
-2. سپس ۱۰ مرحله‌ی ابتدایی بسازید
-3. بعد UI و مسیر پیشروی بازی را کامل کنید
-4. در نهایت ۵۰ مرحله را به‌صورت تدریجی وارد کنید
-
-این مسیر کم‌ریسک‌تر است و پایه‌ای قوی برای توسعه‌ی بعدی فراهم می‌کند.
+### فایل‌هایی که باید حذف کنیم:
+15. `lib/domain/entities/game_state.dart`
+16. `lib/domain/entities/game_phase.dart`
+17. `lib/data/datasources/game_local_data_source.dart`
+18. `lib/data/repositories/game_repository_impl.dart`
+19. `lib/domain/repositories/game_repository.dart`
+20. `lib/domain/usecases/start_game_usecase.dart`
+21. `lib/domain/usecases/get_game_state_usecase.dart`
+22. `lib/domain/usecases/submit_player_action_usecase.dart`
+23. `lib/presentation/state/bloc/game_bloc.dart`
+24. `lib/presentation/state/bloc/game_state_ui.dart`
+25. `lib/presentation/state/event/game_event.dart`
+26. `lib/presentation/game/game_screen.dart`
+27. `lib/presentation/game/components/input_controller.dart`
+28. `lib/presentation/game/roadmap_demo_screen.dart`
+29. `lib/presentation/game/level_demo_screen.dart`
 
 ---
 
-## Phase 1: Core Gameplay & Foundation (MVP) (ETA: 2 Weeks)
+## ۴) گام‌های اجرایی (به ترتیب)
 
-The goal of this phase is to build a stable and complete Minimum Viable Product with all the essential features.
+### گام ۱: مدل داده (Entity ها)
 
-- [x] **Basic Arrow Spawning:** Arrows appear on screen.
-- [x] **Player Input (Swiping):** Detect swipe gestures.
-- [x] **Scoring and Lives System:** Basic implementation of score and lives.
-- **To-Do:**
-    - [ ] **Refine Arrow Logic:**
-        - **Task:** Implement a time-based difficulty scaling system. The speed and frequency of arrows should increase as the game progresses.
-        - **Task:** Ensure arrows spawn randomly from all four edges of the screen (top, bottom, left, right).
-    - [ ] **Bug Fixing:**
-        - **Task:** **Critical:** Debug and fix the swipe detection logic to ensure it accurately registers the direction of the swipe and matches it with the corresponding arrow.
-        - **Task:** Add detailed logging for swipe events, arrow spawning, and game state changes to facilitate easier debugging.
-    - [ ] **Game State Management:**
-        - **Task:** Implement a finite state machine to manage game states (`MainMenu`, `Playing`, `Paused`, `GameOver`).
-        - **Task:** Create a `GameOver` screen that displays the final score, high score, and options to "Restart" or go back to the "Main Menu".
-    - [ ] **UI/UX Basics:**
-        - **Task:** Design and implement a main menu with a "Start Game" button and a display for the high score.
-        - **Task:** Create a simple and clear in-game UI to display the current score and remaining lives.
+#### ۱-الف) `lib/domain/entities/arrow.dart` را بازنویسی کن:
+```dart
+import 'package:equatable/equatable.dart';
+
+enum ArrowDirection { up, down, left, right }
+
+class Arrow extends Equatable {
+  final String id;
+  final int row;                    // سطر در گرید (از 0)
+  final int col;                    // ستون در گرید (از 0)
+  final ArrowDirection direction;   // جهت فلش
+
+  const Arrow({
+    required this.id,
+    required this.row,
+    required this.col,
+    required this.direction,
+  });
+
+  @override
+  List<Object?> get props => [id, row, col, direction];
+}
+```
+
+#### ۱-ب) `lib/domain/entities/level.dart` را بازنویسی کن:
+```dart
+import 'package:equatable/equatable.dart';
+import 'arrow.dart';
+
+class GameLevel extends Equatable {
+  final int id;
+  final int gridRows;           // تعداد سطرهای گرید
+  final int gridCols;           // تعداد ستون‌های گرید
+  final List<Arrow> arrows;     // فلش‌های روی گرید
+  final int hearts;             // تعداد قلب‌ها (معمولاً 3)
+  final int difficulty;         // عدد از 1 تا 5
+
+  const GameLevel({
+    required this.id,
+    required this.gridRows,
+    required this.gridCols,
+    required this.arrows,
+    required this.hearts,
+    required this.difficulty,
+  });
+
+  @override
+  List<Object?> get props => [id, gridRows, gridCols, arrows, hearts, difficulty];
+}
+```
+
+#### ۱-ج) `lib/domain/entities/puzzle_state.dart` را بساز:
+```dart
+import 'package:equatable/equatable.dart';
+import 'arrow.dart';
+
+enum PuzzleStatus { playing, won, lost }
+
+class PuzzleState extends Equatable {
+  final int levelId;
+  final List<Arrow> remainingArrows;     // فلش‌های روی گرید
+  final int hearts;                      // قلب‌های باقی‌مانده
+  final List<String> extractedArrowIds;  // فلش‌های خارج شده (برای undo)
+  final PuzzleStatus status;             // playing / won / lost
+  final String? hintArrowId;             // فلش پیشنهادی (null = بدون hint)
+  final int hintsUsed;                   // تعداد استفاده از hint
+
+  const PuzzleState({
+    required this.levelId,
+    required this.remainingArrows,
+    required this.hearts,
+    required this.extractedArrowIds,
+    required this.status,
+    this.hintArrowId,
+    this.hintsUsed = 0,
+  });
+
+  PuzzleState copyWith({
+    int? levelId,
+    List<Arrow>? remainingArrows,
+    int? hearts,
+    List<String>? extractedArrowIds,
+    PuzzleStatus? status,
+    String? hintArrowId,
+    int? hintsUsed,
+  }) {
+    return PuzzleState(
+      levelId: levelId ?? this.levelId,
+      remainingArrows: remainingArrows ?? this.remainingArrows,
+      hearts: hearts ?? this.hearts,
+      extractedArrowIds: extractedArrowIds ?? this.extractedArrowIds,
+      status: status ?? this.status,
+      hintArrowId: hintArrowId ?? this.hintArrowId,
+      hintsUsed: hintsUsed ?? this.hintsUsed,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        levelId, remainingArrows, hearts,
+        extractedArrowIds, status, hintArrowId, hintsUsed,
+      ];
+}
+```
+
+### گام ۲: منطق بازی (Cubit)
+
+#### ۲-الف) `lib/presentation/state/cubit/level_game_state.dart` را بازنویسی کن:
+```dart
+import 'package:equatable/equatable.dart';
+import '../../../domain/entities/level.dart';
+import '../../../domain/entities/puzzle_state.dart';
+
+class LevelGameState extends Equatable {
+  final int levelNumber;
+  final int totalLevels;
+  final GameLevel currentLevel;
+  final PuzzleState puzzle;
+  final bool isLastActionCollision;  // برای انیمیشن
+
+  const LevelGameState({
+    required this.levelNumber,
+    required this.totalLevels,
+    required this.currentLevel,
+    required this.puzzle,
+    this.isLastActionCollision = false,
+  });
+
+  LevelGameState copyWith({
+    int? levelNumber,
+    int? totalLevels,
+    GameLevel? currentLevel,
+    PuzzleState? puzzle,
+    bool? isLastActionCollision,
+  }) {
+    return LevelGameState(
+      levelNumber: levelNumber ?? this.levelNumber,
+      totalLevels: totalLevels ?? this.totalLevels,
+      currentLevel: currentLevel ?? this.currentLevel,
+      puzzle: puzzle ?? this.puzzle,
+      isLastActionCollision: isLastActionCollision ?? false,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        levelNumber, totalLevels, currentLevel,
+        puzzle, isLastActionCollision,
+      ];
+}
+```
+
+#### ۲-ب) `lib/presentation/state/cubit/level_game_cubit.dart` را بازنویسی کن:
+
+**منطق اصلی — تابع `extractArrow`:**
+```dart
+void extractArrow(String arrowId) {
+  // 1. فلش را در remainingArrows پیدا کن
+  // 2. مسیر حرکت را بررسی کن (از موقعیت فلش تا لبه گرید در جهت فلش)
+  // 3. اگر فلش دیگری در مسیر است → تصادم: hearts-- و isLastActionCollision=true
+  // 4. اگر مسیر خالی است → فلش را از remainingArrows حذف کن، به extractedArrowIds اضافه کن
+  // 5. اگر remainingArrows خالی شد → status = won
+  // 6. اگر hearts == 0 → status = lost
+}
+```
+
+**بررسی مسیر (collision check):**
+```dart
+bool _isPathClear(Arrow arrow, List<Arrow> allArrows) {
+  // بسته به جهت فلش، از موقعیت (row, col) تا لبه گرید حرکت کن
+  // اگر ArrowDirection.up: row از arrow.row-1 تا 0 (همه row های بالاتر)
+  // اگر ArrowDirection.down: row از arrow.row+1 تا gridRows-1
+  // اگر ArrowDirection.left: col از arrow.col-1 تا 0
+  // اگر ArrowDirection.right: col از arrow.col+1 تا gridCols-1
+  // در هر سلول چک کن: آیا فلش دیگری در همان row/col وجود دارد؟
+  // اگر بله → false (مسیر بسته)
+  // اگر هیچ فلشی در مسیر نبود → true (مسیر باز)
+}
+```
+
+**تابع undo:**
+```dart
+void undo() {
+  // اگر extractedArrowIds خالی است → return
+  // آخرین id را از extractedArrowIds بردار
+  // فلش متناظر را در currentLevel.arrows پیدا کن
+  // فلش را به remainingArrows برگردان
+  // hintArrowId = null
+}
+```
+
+**تابع reset:**
+```dart
+void resetLevel() {
+  // تمام فلش‌های currentLevel.arrows را به remainingArrows برگردان
+  // hearts = currentLevel.hearts
+  // extractedArrowIds = []
+  // status = playing
+}
+```
+
+**تابع hint:**
+```dart
+void showHint() {
+  // از بین remainingArrows، فلشی پیدا کن که _isPathClear آن true است
+  // hintArrowId = id آن فلش
+  // hintsUsed++
+}
+```
+
+### گام ۳: داده‌ی مراحل
+
+#### ۳-الف) `lib/data/levels/level_data.dart` را بازنویسی کن:
+
+**ساختار هر مرحله:**
+```dart
+GameLevel(
+  id: 1,
+  gridRows: 3,
+  gridCols: 3,
+  hearts: 3,
+  difficulty: 1,
+  arrows: [
+    Arrow(id: 'a1', row: 0, col: 0, direction: ArrowDirection.right),
+    Arrow(id: 'a2', row: 1, col: 1, direction: ArrowDirection.down),
+  ],
+)
+```
+
+**قوانین طراحی مرحله:**
+- هر مرحله باید **حداقل یک ترتیب extraction موفق** داشته باشد
+- فلش‌ها نباید روی هم باشند (هر سلول حداکثر یک فلش)
+- ترتیب extraction با حذف فلش‌هایی که مسیر بقیه را باز می‌کنند مشخص می‌شود
+
+**تقسیم ۱۰۰ مرحله:**
+- مراحل ۱-۲۰: گرید ۳×۳ تا ۴×۴، ۲-۴ فلش (آموزشی)
+- مراحل ۲۱-۴۰: گرید ۴×۴ تا ۵×۵، ۴-۶ فلش (ساده)
+- مراحل ۴۱-۶۰: گرید ۵×۵ تا ۶×۶، ۶-۹ فلش (متوسط)
+- مراحل ۶۱-۸۰: گرید ۶×۶ تا ۷×۷، ۹-۱۲ فلش (سخت)
+- مراحل ۸۱-۱۰۰: گرید ۷×۷ تا ۸×۸، ۱۲-۱۶ فلش (چالش)
+
+### گام ۴: UI
+
+#### ۴-الف) `lib/presentation/game/components/arrow_widget.dart` را بازنویسی کن:
+- یک سلول گرید با فلش داخلش
+- اگر فلش hint شده → رنگ مخصوص (مثلاً سبز)
+- اگر فلش تصادم کرده → رنگ قرمز + لرزش
+- اگر خالی → فقط پس‌زمینه
+
+#### ۴-ب) `lib/presentation/game/components/grid_widget.dart` را بساز:
+- یک `GridView.builder` یا `Table` با `gridRows` × `gridCols`
+- هر سلول یا خالی است یا یک `ArrowWidget`
+- روی هر فلش ضربه بزن → `cubit.extractArrow(arrowId)`
+
+#### ۴-ج) `lib/presentation/game/components/hud_widget.dart` را بساز:
+- سطر بالا: شماره مرحله + قلب‌ها (❤️❤️❤️)
+- سطر پایین: دکمه Undo، دکمه Reset، دکمه Hint
+
+#### ۴-د) `lib/presentation/game/puzzle_screen.dart` را بساز:
+- `BlocProvider<LevelGameCubit>`
+- `Column` شامل: `HudWidget` + `GridWidget` + پیام برد/باخت
+
+### گام ۵: اتصال و routing
+
+#### ۵-الف) `lib/main.dart` را به‌روزرسانی کن:
+- مسیر `/` → `StartScreen`
+- مسیر `/game` → `PuzzleScreen`
+
+#### ۵-ب) `lib/core/di/injection_container.dart` را ساده کن:
+- فقط `LevelGameCubit` را ثبت کن (اگر لازم است)
+
+### گام ۶: حذف فایل‌های قدیمی
+فایل‌های لیست‌شده در بخش ۲ (شماره ۱۵ تا ۲۹) را حذف کن.
+
+### گام ۷: تست و اصلاح
+- `flutter run` را اجرا کن
+- مراحل اولیه را بازی کن
+- باگ‌ها را رفع کن
 
 ---
 
-## Phase 2: Visual & Audio Polish (ETA: 3 Weeks)
+## ۵) ترتیب اجرا
 
-This phase focuses on improving the user experience with better visuals, animations, and sound.
-
-- **To-Do:**
-    - [ ] **Minimalist UI/UX Design:**
-        - **Task:** Design a clean and modern UI/UX for the entire game, including menus, in-game HUD, and game over screen.
-        - **Task:** Choose a vibrant and visually appealing color palette.
-        - **Task:** Select a clean and readable font for all text elements.
-    - [ ] **Animations:**
-        - **Task:** Animate the spawning of arrows to make them appear smoothly on the screen.
-        - **Task:** Create a satisfying animation for when an arrow is correctly swiped (e.g., it scales up, fades out, and particles burst from it).
-        - **Task:** Implement a "shake" or "wobble" animation for when the player makes an incorrect swipe.
-        - **Task:** Add a subtle background animation to make the game feel more dynamic.
-    - [ ] **Sound Design:**
-        - **Task:** Add sound effects for correct and incorrect swipes.
-        - **Task:** Implement a sound effect for when the game is over.
-        - **Task:** Compose or source a catchy and non-intrusive background music loop.
+```
+گام ۱ (مدل داده) → گام ۲ (منطق) → گام ۳ (مراحل) → گام ۴ (UI) → گام ۵ (اتصال) → گام ۶ (حذف) → گام ۷ (تست)
+```
 
 ---
 
-## Phase 3: Advanced Gameplay & Game Modes (ETA: 4 Weeks)
+## ۶) معیار موفقیت
 
-Introduce variety and replayability with new features and modes.
-
-- **To-Do:**
-    - [ ] **Game Modes:**
-        - **Task:** Implement a "Classic" game mode with gradually increasing difficulty.
-        - **Task:** Implement a "Rush" mode where arrows appear at an increasingly fast pace.
-        - **Task:** Implement a "Time Attack" mode where the player has to score as many points as possible in a limited time.
-    - [ ] **Special Arrows:**
-        - **Task:** Design and implement multi-directional arrows that require multiple swipes in different directions.
-        - **Task:** Design and implement "bomb" arrows that clear all other arrows on the screen when swiped correctly.
-        - **Task:** Design and implement "reverse" arrows that require a swipe in the opposite direction of the arrow.
-        - **Task:** Design and implement "color-coded" arrows that can only be cleared by a swipe of the corresponding color.
-
----
-
-## Phase 4: Services & Monetization (ETA: 2 Weeks)
-
-Integrate platform services for a competitive and social experience, and explore monetization strategies.
-
-- **To-Do:**
-    - [ ] **Platform Integration:**
-        - **Task:** Integrate Google Play Games Services on Android.
-        - **Task:** Integrate Game Center on iOS.
-    - [ ] **Leaderboards:**
-        - **Task:** Implement a global leaderboard for each game mode.
-    - [ ] **Achievements:**
-        - **Task:** Create and implement a set of achievements for players to unlock.
-    - [ ] **Monetization:**
-        - **Task:** Implement an in-app purchase to remove ads.
-        - **Task:** Integrate an ad network to display interstitial ads between games.
-
----
-
-## Phase 5: Final Touches & Release (ETA: 1 Week)
-
-Prepare the game for public release.
-
-- **To-Do:**
-    - [ ] **Testing:**
-        - **Task:** Perform extensive testing on a wide range of devices to identify and fix bugs.
-        - **Task:** Get feedback from a group of beta testers.
-    - [ ] **Optimization:**
-        - **Task:** Profile the game's performance and optimize any bottlenecks.
-        - **Task:** Reduce the game's memory footprint and battery consumption.
-    - [ ] **Store Presence:**
-        - **Task:** Create high-quality screenshots and a promotional video for the app stores.
-        - **Task:** Write a compelling app description and release notes.
-        - **Task:** Design a professional-looking app icon.
-    - [ ] **Submission:**
-        - **Task:** Submit the game to the Google Play Store and Apple App Store for review.
+- [ ] روی فلش ضربه می‌زنیم → فلش در جهت خودش خارج می‌شود
+- [ ] اگر مسیر بسته باشد → تصادم + قلب کم می‌شود
+- [ ] ۳ قلب در هر مرحله
+- [ ] دکمه Undo کار می‌کند
+- [ ] دکمه Reset کار می‌کند
+- [ ] دکمه Hint کار می‌کند
+- [ ] ۱۰۰ مرحله با سختی تدریجی
+- [ ] UI مینیمالیست و تمیز
