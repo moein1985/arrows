@@ -43,6 +43,7 @@ class LevelGameCubit extends Cubit<LevelGameState> {
   void extractArrow(String arrowId) {
     final puzzle = state.puzzle;
     if (puzzle.status != PuzzleStatus.playing) return;
+    if (puzzle.isAnimating) return;
 
     final arrow = puzzle.remainingArrows.firstWhere(
       (a) => a.id == arrowId,
@@ -58,13 +59,18 @@ class LevelGameCubit extends Cubit<LevelGameState> {
 
     if (!isClear) {
       final newHearts = puzzle.hearts - 1;
-      final newStatus = newHearts <= 0 ? PuzzleStatus.lost : PuzzleStatus.playing;
+      final newRemaining = puzzle.remainingArrows
+          .map((a) => a.id == arrowId ? a.copyWith(state: BlockState.collided) : a)
+          .toList();
+
       emit(
         state.copyWith(
           puzzle: puzzle.copyWith(
+            remainingArrows: newRemaining,
             hearts: newHearts,
-            status: newStatus,
             hintArrowId: null,
+            collidedArrowId: arrowId,
+            isAnimating: true,
           ),
           isLastActionCollision: true,
         ),
@@ -72,10 +78,31 @@ class LevelGameCubit extends Cubit<LevelGameState> {
       return;
     }
 
-    final newRemaining = List<Arrow>.from(puzzle.remainingArrows)
-      ..removeWhere((a) => a.id == arrowId);
+    final newRemaining = puzzle.remainingArrows
+        .map((a) => a.id == arrowId ? a.copyWith(state: BlockState.moving) : a)
+        .toList();
+
+    emit(
+      state.copyWith(
+        puzzle: puzzle.copyWith(
+          remainingArrows: newRemaining,
+          hintArrowId: null,
+          isAnimating: true,
+        ),
+        isLastActionCollision: false,
+      ),
+    );
+  }
+
+  void onSlideComplete(String arrowId) {
+    final puzzle = state.puzzle;
+    if (puzzle.status != PuzzleStatus.playing) return;
+
+    final newRemaining =
+        List<Arrow>.from(puzzle.remainingArrows)..removeWhere((a) => a.id == arrowId);
     final newExtracted = List<String>.from(puzzle.extractedArrowIds)..add(arrowId);
-    final newStatus = newRemaining.isEmpty ? PuzzleStatus.won : PuzzleStatus.playing;
+    final newStatus =
+        newRemaining.isEmpty ? PuzzleStatus.won : PuzzleStatus.playing;
 
     emit(
       state.copyWith(
@@ -83,9 +110,30 @@ class LevelGameCubit extends Cubit<LevelGameState> {
           remainingArrows: newRemaining,
           extractedArrowIds: newExtracted,
           status: newStatus,
-          hintArrowId: null,
+          isAnimating: false,
         ),
-        isLastActionCollision: false,
+      ),
+    );
+  }
+
+  void onCollisionComplete(String arrowId) {
+    final puzzle = state.puzzle;
+
+    final newRemaining = puzzle.remainingArrows
+        .map((a) => a.id == arrowId ? a.copyWith(state: BlockState.idle) : a)
+        .toList();
+
+    final newStatus =
+        puzzle.hearts <= 0 ? PuzzleStatus.lost : PuzzleStatus.playing;
+
+    emit(
+      state.copyWith(
+        puzzle: puzzle.copyWith(
+          remainingArrows: newRemaining,
+          status: newStatus,
+          collidedArrowId: null,
+          isAnimating: false,
+        ),
       ),
     );
   }
@@ -123,6 +171,7 @@ class LevelGameCubit extends Cubit<LevelGameState> {
   void undo() {
     final puzzle = state.puzzle;
     if (puzzle.extractedArrowIds.isEmpty) return;
+    if (puzzle.isAnimating) return;
     if (puzzle.status != PuzzleStatus.playing && puzzle.status != PuzzleStatus.won) return;
 
     final lastId = puzzle.extractedArrowIds.last;
@@ -138,6 +187,7 @@ class LevelGameCubit extends Cubit<LevelGameState> {
           extractedArrowIds: newExtracted,
           status: PuzzleStatus.playing,
           hintArrowId: null,
+          isAnimating: false,
         ),
         isLastActionCollision: false,
       ),
@@ -157,6 +207,7 @@ class LevelGameCubit extends Cubit<LevelGameState> {
   void showHint() {
     final puzzle = state.puzzle;
     if (puzzle.status != PuzzleStatus.playing) return;
+    if (puzzle.isAnimating) return;
 
     for (final arrow in puzzle.remainingArrows) {
       final isClear = _isPathClear(

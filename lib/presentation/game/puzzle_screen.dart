@@ -52,8 +52,9 @@ class _PuzzleView extends StatelessWidget {
                       child: GridWidget(
                         level: state.currentLevel,
                         puzzle: puzzle,
-                        isLastActionCollision: state.isLastActionCollision,
                         onArrowTap: cubit.extractArrow,
+                        onSlideComplete: cubit.onSlideComplete,
+                        onCollisionComplete: cubit.onCollisionComplete,
                       ),
                     ),
                   ),

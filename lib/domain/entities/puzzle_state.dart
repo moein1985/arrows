@@ -11,6 +11,8 @@ class PuzzleState extends Equatable {
   final PuzzleStatus status;
   final String? hintArrowId;
   final int hintsUsed;
+  final String? collidedArrowId;
+  final bool isAnimating;
 
   const PuzzleState({
     required this.levelId,
@@ -20,6 +22,8 @@ class PuzzleState extends Equatable {
     required this.status,
     this.hintArrowId,
     this.hintsUsed = 0,
+    this.collidedArrowId,
+    this.isAnimating = false,
   });
 
   PuzzleState copyWith({
@@ -30,6 +34,8 @@ class PuzzleState extends Equatable {
     PuzzleStatus? status,
     String? hintArrowId,
     int? hintsUsed,
+    String? collidedArrowId,
+    bool? isAnimating,
   }) {
     return PuzzleState(
       levelId: levelId ?? this.levelId,
@@ -39,6 +45,8 @@ class PuzzleState extends Equatable {
       status: status ?? this.status,
       hintArrowId: hintArrowId ?? this.hintArrowId,
       hintsUsed: hintsUsed ?? this.hintsUsed,
+      collidedArrowId: collidedArrowId,
+      isAnimating: isAnimating ?? this.isAnimating,
     );
   }
 
@@ -51,5 +59,7 @@ class PuzzleState extends Equatable {
         status,
         hintArrowId,
         hintsUsed,
+        collidedArrowId,
+        isAnimating,
       ];
 }

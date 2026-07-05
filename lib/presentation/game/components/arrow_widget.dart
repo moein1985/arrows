@@ -4,22 +4,21 @@ import '../../../domain/entities/arrow.dart';
 class ArrowWidget extends StatelessWidget {
   final Arrow? arrow;
   final bool isHint;
-  final bool isCollision;
+  final bool isCollided;
+  final bool isMoving;
   final VoidCallback? onTap;
 
   const ArrowWidget({
     super.key,
     this.arrow,
     this.isHint = false,
-    this.isCollision = false,
+    this.isCollided = false,
+    this.isMoving = false,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    Color bgColor = const Color(0xFF1E1E2E);
-    Color iconColor = Colors.white;
-
     if (arrow == null) {
       return Container(
         margin: const EdgeInsets.all(2),
@@ -30,10 +29,13 @@ class ArrowWidget extends StatelessWidget {
       );
     }
 
+    Color bgColor = const Color(0xFF1E1E2E);
+    Color iconColor = Colors.white;
+
     if (isHint) {
       bgColor = Colors.green.withValues(alpha: 0.3);
       iconColor = Colors.greenAccent;
-    } else if (isCollision) {
+    } else if (isCollided) {
       bgColor = Colors.red.withValues(alpha: 0.3);
       iconColor = Colors.redAccent;
     }
